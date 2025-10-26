@@ -5,30 +5,28 @@ axios.defaults.baseURL = "https://pokeapi.co/api/v2/";
 
 /**
  *  
- * @param {*} offset 
- * @param {*} limit 
+ * @param {Number} offset 
+ * @param {Number} limit 
  * @returns Lista de Pokémons com nome, url e imagem
  */
-export async function BuscarPokemons(offset = 0, limit = 20) {
+export async function BuscarPokemons(offset = 0, limit = 10) {
   try {
     const response = await axios.get(`pokemon?offset=${offset}&limit=${limit}`);
-    const pokemons = response.data.results;
+    const { results, previous, next} = response.data;
 
-    const listaPokemons = await Promise.all(
-      pokemons.map(async (pokemon) => {
-        const imageSrc = await ObterImagemPokemon(pokemon.url);
-        return {
-          nome: pokemon.name,
-          url: pokemon.url,
-          imageSrc,
-        };
-      })
+    const pokemons = await Promise.all(
+      results.map(async pokemon => ({
+        nome: pokemon.name,
+        url: pokemon.url,
+        imageSrc: await ObterImagemPokemon(pokemon.url)
+      }))
     );
 
-    return listaPokemons;
+    console.log({ results: pokemons,previous: previous, next: next  })
+    return { results: pokemons,previous: previous, next: next  };
   } catch (error) {
-    console.error("Erro ao buscar Pokémons:", error);
-    return [];
+    console.error(error);
+    return { results: [], next: null, previous: null };
   }
 }
 

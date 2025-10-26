@@ -1,6 +1,7 @@
 import { container_header } from './components/Header.js'
 import { Card } from './components/Card.js'
 import { AlertError } from './components/Alert.js'
+import { Pagination } from './components/Pagination.js'
 
 import { BuscarPokemons } from './js/ConsumidorApi.js'
 
@@ -32,35 +33,87 @@ function RemoverCarregando() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('✅ DOM carregado');
+function CarregarPokemons(offset = 0, limit = 10) {
+    container_cards.innerHTML = '';
+    RemoverCarregando();
+    ExibirCarregando();
+    
+    const oldPagination = document.getElementById('pagination-container');
+    if (oldPagination) 
+        oldPagination.remove();
 
-    let isLoading = true;
-    let errorElement = null;
+    let previous = null;
+    let next = null;
 
-    if (isLoading) {
-        ExibirCarregando();
-    }
-
-    BuscarPokemons(0, 20).then(pokemons => {
-        console.log('✅ Pokémons carregados:', pokemons);
-        pokemons.forEach(async pokemon => {
-            const urlImagem = await pokemon.imageSrc;
+    BuscarPokemons(offset, limit)
+    .then(response => {
+        previous = response.previous;
+        next = response.next;
+        
+        response.results.forEach(async pokemon => {
+            console.log(pokemon);
+            const urlImagem = pokemon.imageSrc;
             const card = Card(pokemon.nome, urlImagem, pokemon.url);
-            console.log(pokemon.nome, pokemon.imageSrc, pokemon.url); // 👀
             container_cards.appendChild(card);
+        })
+
+        RemoverCarregando();
+        
+        console.log('Carregamento concluído');
+        
+        app.appendChild(container_cards);
+
+        const paginationElement = Pagination(next, previous, (newOffset, newLimit) => {
+            CarregarPokemons(newOffset, newLimit);
         });
 
-        RemoverCarregando();
-        console.log('✅ Carregamento concluído');
-        app.appendChild(container_cards);
-        isLoading = false;
-    }
-    ).catch(error => {
+        paginationElement.id = 'pagination-container';
+        app.appendChild(paginationElement);
+    }).catch(error => {
         console.error("Erro ao buscar Pokémons:", error);
         RemoverCarregando();
-        errorElement = AlertError(`Erro ao carregar Pokémons. Tente novamente mais tarde.`);
-        app.appendChild(errorElement);
-        isLoading = false;
+        
+        app.appendChild(AlertError(`Erro ao carregar Pokémons. Tente novamente mais tarde.`));
     });
+}
+
+// executa quando o DOM estiver completamente carregado
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM carregado');
+
+    CarregarPokemons();
+    // CarregarPokemons(0, 10); 
+
+    // let isLoading = true;
+    // let errorElement = null;
+
+    // if (isLoading) {
+    //     ExibirCarregando();
+    // }
+
+    // BuscarPokemons(0, 10).then(pokemons => {
+    //     console.log('Pokémons carregados:', pokemons);
+    //     pokemons.forEach(async pokemon => {
+    //         const urlImagem = await pokemon.imageSrc;
+    //         const card = Card(pokemon.nome, urlImagem, pokemon.url);
+    //         console.log(pokemon.nome, pokemon.imageSrc, pokemon.url); // 👀
+    //         container_cards.appendChild(card);
+    //     });
+
+    //     RemoverCarregando();
+        
+    //     console.log('Carregamento concluído');
+        
+    //     app.appendChild(container_cards);
+    //     isLoading = false;
+    // }
+    // ).catch(error => {
+    //     console.error("Erro ao buscar Pokémons:", error);
+    //     RemoverCarregando();
+        
+    //     errorElement = AlertError(`Erro ao carregar Pokémons. Tente novamente mais tarde.`);
+        
+    //     app.appendChild(errorElement);
+    //     isLoading = false;
+    // });
 });
