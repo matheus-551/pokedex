@@ -2,6 +2,7 @@ import { container_header } from './components/Header.js'
 import { Card } from './components/Card.js'
 import { AlertError } from './components/Alert.js'
 import { Pagination } from './components/Pagination.js'
+import { Modal } from './components/Modal.js'
 
 import { BuscarPokemons } from './js/ConsumidorApi.js'
 
@@ -33,7 +34,7 @@ function RemoverCarregando() {
     }
 }
 
-function CarregarPokemons(offset = 0, limit = 10) {
+async function  CarregarPokemons(offset = 0, limit = 10) {
     container_cards.innerHTML = '';
     RemoverCarregando();
     ExibirCarregando();
@@ -53,8 +54,8 @@ function CarregarPokemons(offset = 0, limit = 10) {
         response.results.forEach(async pokemon => {
             console.log(pokemon);
             const urlImagem = pokemon.imageSrc;
-            const card = Card(pokemon.nome, urlImagem, pokemon.url);
-            container_cards.appendChild(card);
+            const cardComModal = await Card(pokemon.nome, urlImagem, pokemon.url);
+            container_cards.appendChild(cardComModal);
         })
 
         RemoverCarregando();
@@ -82,38 +83,4 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM carregado');
 
     CarregarPokemons();
-    // CarregarPokemons(0, 10); 
-
-    // let isLoading = true;
-    // let errorElement = null;
-
-    // if (isLoading) {
-    //     ExibirCarregando();
-    // }
-
-    // BuscarPokemons(0, 10).then(pokemons => {
-    //     console.log('Pokémons carregados:', pokemons);
-    //     pokemons.forEach(async pokemon => {
-    //         const urlImagem = await pokemon.imageSrc;
-    //         const card = Card(pokemon.nome, urlImagem, pokemon.url);
-    //         console.log(pokemon.nome, pokemon.imageSrc, pokemon.url); // 👀
-    //         container_cards.appendChild(card);
-    //     });
-
-    //     RemoverCarregando();
-        
-    //     console.log('Carregamento concluído');
-        
-    //     app.appendChild(container_cards);
-    //     isLoading = false;
-    // }
-    // ).catch(error => {
-    //     console.error("Erro ao buscar Pokémons:", error);
-    //     RemoverCarregando();
-        
-    //     errorElement = AlertError(`Erro ao carregar Pokémons. Tente novamente mais tarde.`);
-        
-    //     app.appendChild(errorElement);
-    //     isLoading = false;
-    // });
 });

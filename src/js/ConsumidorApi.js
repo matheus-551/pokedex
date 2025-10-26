@@ -30,6 +30,30 @@ export async function BuscarPokemons(offset = 0, limit = 10) {
   }
 }
 
+export async function BuscarDetalhesPokemon(url) {
+  try {
+    const response = await axios.get(url);
+    const { id, name, height, weight, types, sprites } = response.data;
+
+    const imagem =
+      sprites.other?.dream_world?.front_default ||
+      sprites.other?.["official-artwork"]?.front_default ||
+      sprites.front_default;
+
+    return {
+      id,
+      name,
+      height,
+      weight,
+      types,
+      imagem
+    };
+  } catch (error) {
+    console.error("Erro ao buscar detalhes do Pokémon:", error);
+    return null;
+  }
+}
+
 async function ObterImagemPokemon(url) {
   try {
     const response = await axios.get(url);
