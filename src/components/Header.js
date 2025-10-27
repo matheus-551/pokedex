@@ -1,3 +1,5 @@
+import { CarregaPokemonPorNome } from '../App.js';
+
 const container_header = document.createElement('div');
 container_header.classList.add('w-full', 'flex-col', 'justify-center', 'items-center', 'mb-4', 'bg-red-600', 'shadow-sm');
 
@@ -22,13 +24,22 @@ navbar.innerHTML = `
 const formSearch = document.createElement('div');
 formSearch.innerHTML = `
   <div class="w-full p-2 flex items-center justify-center">
-      <input type="text" class="input bg-white text-black" placeholder="Diz ai quem tu queres">
-      <button class="btn btn-neutral ml-2">Buscar</button>
+      <input type="text" id="input_search" class="input bg-white text-black" placeholder="Diz ai quem tu queres">
+      <button id="btn_search" class="btn btn-neutral ml-2">Buscar</button>
   </div>
 `;
 
-
 container_header.appendChild(navbar);
 container_header.appendChild(formSearch);
+
+const inputSearch = formSearch.querySelector('#input_search');
+const btnSearch = formSearch.querySelector('#btn_search');
+
+btnSearch.addEventListener('click', async () => {
+    const nomePokemon = inputSearch.value.trim();
+    if (nomePokemon) {
+        await CarregaPokemonPorNome(nomePokemon);
+    }
+});
 
 export { container_header };

@@ -2,9 +2,8 @@ import { container_header } from './components/Header.js'
 import { Card } from './components/Card.js'
 import { AlertError } from './components/Alert.js'
 import { Pagination } from './components/Pagination.js'
-import { Modal } from './components/Modal.js'
 
-import { BuscarPokemons } from './js/ConsumidorApi.js'
+import { BuscarPokemonPorNome, BuscarPokemons } from './js/ConsumidorApi.js'
 
 import './style.css'
 
@@ -34,7 +33,36 @@ function RemoverCarregando() {
     }
 }
 
-async function  CarregarPokemons(offset = 0, limit = 10) {
+export async function CarregaPokemonPorNome(nome) {
+    console.log(`🔍 Carregando Pokémon: ${nome}`);
+    container_cards.innerHTML = '';
+    RemoverCarregando();
+    ExibirCarregando();
+
+    const oldPagination = document.getElementById('pagination-container');
+    if (oldPagination) oldPagination.remove();
+
+    BuscarPokemonPorNome(nome)
+        .then(async pokemon => {
+            if (pokemon) {
+                const cardComModal = await Card(pokemon.name, pokemon.imagem, `https://pokeapi.co/api/v2/pokemon/${pokemon.name}`);
+                container_cards.appendChild(cardComModal);
+            } else {
+                app.appendChild(AlertError(`Pokémon "${nome}" não encontrado.`));
+            }
+
+            RemoverCarregando();
+            console.log('Carregamento concluído');
+            app.appendChild(container_cards);
+        })
+        .catch(error => {
+            console.error("Erro ao buscar Pokémon por nome:", error);
+            RemoverCarregando();
+            app.appendChild(AlertError(`Erro ao carregar o Pokémon. Tente novamente mais tarde.`));
+        });
+}
+
+async function CarregarPokemons(offset = 0, limit = 10) {
     container_cards.innerHTML = '';
     RemoverCarregando();
     ExibirCarregando();
@@ -78,7 +106,7 @@ async function  CarregarPokemons(offset = 0, limit = 10) {
     });
 }
 
-// executa quando o DOM estiver completamente carregado
+// executa quando o DOM es  tiver completamente carregado
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM carregado');
 

@@ -16,19 +16,15 @@ export async function Card(nome, urlImagem, url) {
     </div>
   `;
 
-  // Cria o modal para este card
   const modal = await Modal(url);
 
-  // Pega o botão "Detalhes"
   const buttonDetalhes = card.querySelector('button');
   const dialog = modal.querySelector('dialog');
 
-  // Adiciona o evento de clique para abrir o modal
   buttonDetalhes.addEventListener('click', () => {
     dialog.showModal();
   });
 
-  // Container que junta card + modal
   const container = document.createElement('div');
   container.appendChild(card);
   container.appendChild(modal);
