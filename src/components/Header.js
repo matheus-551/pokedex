@@ -1,4 +1,4 @@
-import { CarregaPokemonPorNome } from '../App.js';
+import { CarregaPokemonPorNome, CarregarFavoritos } from '../App.js';
 
 const container_header = document.createElement('div');
 container_header.classList.add('w-full', 'flex-col', 'justify-center', 'items-center', 'mb-4', 'bg-red-600', 'shadow-sm');
@@ -14,9 +14,11 @@ navbar.innerHTML = `
             </div>
         </div>
         <div class="h-full flex justify-center items-center gap-2" id="conteiner_icons_navbar">
-            <span class="material-symbols-outlined cursor-pointer">
-                favorite
-            </span>
+            <button id="btn_favoritos" class="btn btn-ghost btn-circle">
+                <span class="material-symbols-outlined cursor-pointer">
+                    favorite
+                </span>
+            </button>    
         </div>
     </div>
 `
@@ -40,6 +42,11 @@ btnSearch.addEventListener('click', async () => {
     if (nomePokemon) {
         await CarregaPokemonPorNome(nomePokemon);
     }
+});
+
+const btnFavoritos = navbar.querySelector('#btn_favoritos');
+btnFavoritos.addEventListener('click', async () => {
+    await CarregarFavoritos();
 });
 
 export { container_header };

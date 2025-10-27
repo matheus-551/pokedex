@@ -17,7 +17,6 @@ const container_cards = document.createElement('div');
 container_cards.classList.add('w-full', 'grid', 'grid-cols-1', 'sm:grid-cols-2', 'md:grid-cols-3', 'lg:grid-cols-4', 'xl:grid-cols-5', 'gap-4', 'p-4');
 
 function ExibirCarregando() {
-    console.log('⏳ Exibindo carregando...');
     const carregando = document.createElement('div');
     carregando.id = 'carregando';
     carregando.classList.add('w-full', 'text-center', 'text-gray-500', 'my-4');
@@ -33,8 +32,33 @@ function RemoverCarregando() {
     }
 }
 
+export function CarregarFavoritos() {
+    container_cards.innerHTML = '';
+    RemoverCarregando();
+    ExibirCarregando();
+
+    const oldPagination = document.getElementById('pagination-container');
+    if (oldPagination) oldPagination.remove();
+
+    let favoritos = JSON.parse(localStorage.getItem('favoritos')) || [];
+
+    if (favoritos.length === 0) {
+        RemoverCarregando();
+        app.appendChild(AlertError('Nenhum Pokémon favoritado.'));
+        return;
+    }
+
+    favoritos.forEach(async pokemon => {
+        const cardComModal = await Card(pokemon.name, pokemon.imageSrc, pokemon.url);
+        container_cards.appendChild(cardComModal);
+    });
+
+    RemoverCarregando();
+    console.log('Carregamento de favoritos concluído');
+    app.appendChild(container_cards);
+}
+
 export async function CarregaPokemonPorNome(nome) {
-    console.log(`🔍 Carregando Pokémon: ${nome}`);
     container_cards.innerHTML = '';
     RemoverCarregando();
     ExibirCarregando();
@@ -56,7 +80,6 @@ export async function CarregaPokemonPorNome(nome) {
             app.appendChild(container_cards);
         })
         .catch(error => {
-            console.error("Erro ao buscar Pokémon por nome:", error);
             RemoverCarregando();
             app.appendChild(AlertError(`Erro ao carregar o Pokémon. Tente novamente mais tarde.`));
         });
@@ -87,8 +110,6 @@ async function CarregarPokemons(offset = 0, limit = 10) {
         })
 
         RemoverCarregando();
-        
-        console.log('Carregamento concluído');
         
         app.appendChild(container_cards);
 
