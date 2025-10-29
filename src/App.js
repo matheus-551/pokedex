@@ -16,6 +16,13 @@ app.appendChild(container_header);
 const container_cards = document.createElement('div');
 container_cards.classList.add('w-full', 'grid', 'grid-cols-1', 'sm:grid-cols-2', 'md:grid-cols-3', 'lg:grid-cols-4', 'xl:grid-cols-5', 'gap-4', 'p-4');
 
+const pageTitle = document.createElement('h2');
+pageTitle.id = 'page-title';
+pageTitle.classList.add(
+    'text-2xl', 'font-bold', 'text-black',
+    'text-center', 'mt-4'
+);
+
 function DefinirTitulo(text) {
     pageTitle.innerText = text;
     
@@ -114,6 +121,7 @@ export async function CarregaPokemonPorNome(nome) {
 export async function CarregarPokemons(offset = 0, limit = 10) {
     container_cards.innerHTML = '';
     RemoverCarregando();
+    RemoverTitulo();
     ExibirCarregando();
 
     const existingErrorScreen = document.getElementById('overlay');
@@ -142,6 +150,7 @@ export async function CarregarPokemons(offset = 0, limit = 10) {
         RemoverCarregando();
         
         app.appendChild(container_cards);
+        DefinirTitulo("Lista de Pokémons");
 
         const paginationElement = Pagination(next, previous, (newOffset, newLimit) => {
             CarregarPokemons(newOffset, newLimit);

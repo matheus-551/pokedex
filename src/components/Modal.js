@@ -86,6 +86,8 @@ export async function Modal(url) {
         }
     });
 
+
+    // Fechar o modal
     buttonFechar.addEventListener('click', () => {
         dialog.close();
     });
