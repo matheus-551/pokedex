@@ -6,7 +6,7 @@ export async function Card(nome, urlImagem, url) {
 
   card.innerHTML = `
     <figure class="px-10 pt-10 bg-white rounded-t-xl">
-      <img src="${urlImagem}" alt="${nome}" class="w-full h-46 object-contain">
+      <img src="${urlImagem}" alt="${nome}" class="w-full h-46 object-contain min-w-48">
     </figure>
     <div class="card-body items-center text-center">
       <h2 class="card-title capitalize">${nome}</h2>
