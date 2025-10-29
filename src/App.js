@@ -8,13 +8,26 @@ import { BuscarPokemonPorNome, BuscarPokemons } from './js/PokemonApiService.js'
 import './style.css'
 
 const app = document.getElementById('app')
-app.classList.add('w-full', 'bg-white', 'flex', 'flex-col')
+app.classList.add('w-full', 'min-h-screen', 'bg-white', 'flex', 'flex-col')
 
 // Insere o header no app
 app.appendChild(container_header);
 
 const container_cards = document.createElement('div');
 container_cards.classList.add('w-full', 'grid', 'grid-cols-1', 'sm:grid-cols-2', 'md:grid-cols-3', 'lg:grid-cols-4', 'xl:grid-cols-5', 'gap-4', 'p-4');
+
+function DefinirTitulo(text) {
+    pageTitle.innerText = text;
+    
+    if (!document.getElementById("page-title")) {
+        app.insertBefore(pageTitle, container_cards);
+    }
+}
+
+function RemoverTitulo() {
+    const title = document.getElementById("page-title");
+    if (title) title.remove();
+}
 
 function ExibirCarregando() {
     const carregando = document.createElement('div');
@@ -35,6 +48,7 @@ function RemoverCarregando() {
 export function CarregarFavoritos() {
     container_cards.innerHTML = '';    
     RemoverCarregando();
+    RemoverTitulo();
     ExibirCarregando();
 
     const oldPagination = document.getElementById('pagination-container');
@@ -48,7 +62,7 @@ export function CarregarFavoritos() {
 
     if (favoritos.length === 0) {
         RemoverCarregando();
-        
+        RemoverTitulo();  
         app.appendChild(ErrorScreen('Nenhum Pokémon favoritado ainda!'));
         
         return;
@@ -60,6 +74,7 @@ export function CarregarFavoritos() {
     });
 
     RemoverCarregando();
+    DefinirTitulo("Meus Favoritos");
     console.log('Carregamento de favoritos concluído');
     app.appendChild(container_cards);
 }
@@ -67,6 +82,7 @@ export function CarregarFavoritos() {
 export async function CarregaPokemonPorNome(nome) {
     container_cards.innerHTML = '';
     RemoverCarregando();
+    RemoverTitulo(); 
     ExibirCarregando();
 
     const oldPagination = document.getElementById('pagination-container');
