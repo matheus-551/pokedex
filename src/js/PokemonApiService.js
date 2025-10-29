@@ -13,7 +13,6 @@ export async function BuscarPokemons(offset = 0, limit = 10) {
   try {
     const response = await axios.get(`pokemon?offset=${offset}&limit=${limit}`);
     const { results, previous, next} = response.data;
-    console.log('Resposta da API BuscarPokemons:', response.data);
 
     const pokemons = await Promise.all(
       results.map(async pokemon => ({
@@ -24,7 +23,6 @@ export async function BuscarPokemons(offset = 0, limit = 10) {
       }))
     );
 
-    console.log({ results: pokemons,previous: previous, next: next  })
     return { results: pokemons,previous: previous, next: next  };
   } catch (error) {
     console.error(error);

@@ -82,7 +82,6 @@ export function CarregarFavoritos() {
 
     RemoverCarregando();
     DefinirTitulo("Meus Favoritos");
-    console.log('Carregamento de favoritos concluído');
     app.appendChild(container_cards);
 }
 
@@ -109,7 +108,6 @@ export async function CarregaPokemonPorNome(nome) {
             }
 
             RemoverCarregando();
-            console.log('Carregamento concluído');
             app.appendChild(container_cards);
         })
         .catch(error => {
@@ -141,7 +139,6 @@ export async function CarregarPokemons(offset = 0, limit = 10) {
         next = response.next;
         
         response.results.forEach(async pokemon => {
-            console.log('Carregando Pokémon:', pokemon);
             const urlImagem = pokemon.imageSrc;
             const cardComModal = await Card(pokemon.nome, urlImagem, pokemon.url);
             container_cards.appendChild(cardComModal);
@@ -168,7 +165,5 @@ export async function CarregarPokemons(offset = 0, limit = 10) {
 
 // executa quando o DOM es  tiver completamente carregado
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM carregado');
-
     CarregarPokemons();
 });
