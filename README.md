@@ -2,6 +2,10 @@
 
 Pokedex simples em JavaScript puro (DOM), usando Axios para chamadas à API e Tailwind CSS para estilos.
 
+## Link para o projeto publicado
+
+[Pokedex](https://vercel.com/matheus551s-projects/pokedex "Pokedex")
+
 ## Tecnologias
 
 - JavaScript (ES modules / CommonJS conforme package.json)
@@ -14,17 +18,21 @@ Pokedex simples em JavaScript puro (DOM), usando Axios para chamadas à API e Ta
 
 ```bash
 pokedex/
+├── public/
 ├── src/
+│ ├── components/
+│ │ └── Card.js
+│ │ └── ErrorScreen.js
+│ │ └── Header.js
+│ │ └── Modal.js
+│ │ └── Pagination.js
 │ ├── js/
-│ │ ├── api.js
-│ │ ├── app.js
-│ │ └── ui.js
-│ └── css/
-│ ├── main.css (entrada Tailwind)
-│ └── output.css (gerado)
+│ │ └── PokemonApiService.js
+│ ├── App.js  // Arquivo principal
+│ ├── style.css
 ├── index.html
 ├── package.json
-├── tailwind.config.js
+├── vite.config.js
 └── README.md
 ```
 
@@ -38,23 +46,11 @@ A estrutura real pode variar; ajuste conforme necessário.
       npm install
    ```
 
-2. Gerar/observar o CSS do Tailwind em um terminal (mantê-lo rodando enquanto desenvolve):
-
-   ```bash
-      npm build-watch:css
-   ```
-
-   . ou
-
-   ```bash
-      npm build:css
-   ```
-
-3. Em outro terminal, iniciar o servidor de desenvolvimento (Vite) - (Caso tenha realizado o build-watch):
+2. Em outro terminal, iniciar o servidor de desenvolvimento (Vite) - (Caso tenha realizado o build-watch):
    ```bash
       npm run dev
    ```
-4. Abrir no navegador:
+3. Abrir no navegador:
    `http://localhost:5173 (ou a porta indicada pelo Vite)`
 
 ## Build e preview (produção)
