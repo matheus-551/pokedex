@@ -13,12 +13,14 @@ export async function BuscarPokemons(offset = 0, limit = 10) {
   try {
     const response = await axios.get(`pokemon?offset=${offset}&limit=${limit}`);
     const { results, previous, next} = response.data;
+    console.log('Resposta da API BuscarPokemons:', response.data);
 
     const pokemons = await Promise.all(
       results.map(async pokemon => ({
+        id: pokemon.id,
         nome: pokemon.name,
         url: pokemon.url,
-        imageSrc: await ObterImagemPokemon(pokemon.url)
+        imageSrc: `http://img.pokemondb.net/artwork/large/${pokemon.name}.jpg`
       }))
     );
 
@@ -33,11 +35,8 @@ export async function BuscarPokemons(offset = 0, limit = 10) {
 export async function BuscarPokemonPorNome(nome) {
   try {
     const response = await axios.get(`pokemon/${nome.toLowerCase()}`);
-    const { name, sprites } = response.data;
-    const imagem =
-      sprites.other?.dream_world?.front_default ||
-      sprites.other?.["official-artwork"]?.front_default ||
-      sprites.front_default;
+    const { name } = response.data;
+    const imagem =`http://img.pokemondb.net/artwork/large/${name}.jpg` 
     return { name, imagem };
   } catch (error) {
     console.error("Erro ao buscar Pokémon por nome:", error);
@@ -50,10 +49,7 @@ export async function BuscarDetalhesPokemon(url) {
     const response = await axios.get(url);
     const { id, name, height, weight, types, sprites } = response.data;
 
-    const imagem =
-      sprites.other?.dream_world?.front_default ||
-      sprites.other?.["official-artwork"]?.front_default ||
-      sprites.front_default;
+    const imagem = `http://img.pokemondb.net/artwork/large/${name}.jpg`;
 
     return {
       id,
@@ -65,16 +61,6 @@ export async function BuscarDetalhesPokemon(url) {
     };
   } catch (error) {
     console.error("Erro ao buscar detalhes do Pokémon:", error);
-    return null;
-  }
-}
-
-async function ObterImagemPokemon(url) {
-  try {
-    const response = await axios.get(url);
-    return response.data.sprites.other.dream_world.front_default;
-  } catch (error) {
-    console.error("Erro ao obter imagem do Pokémon:", error);
     return null;
   }
 }

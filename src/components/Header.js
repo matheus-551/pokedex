@@ -8,7 +8,7 @@ const navbar = document.createElement('div');
 navbar.innerHTML = `
     <div class="navbar" id="navbar">
         <div class="flex-1">
-            <div class="flex items-center justify-start flex-1" id="conteiner_logo_navbar">
+            <div class="flex items-center justify-start flex-1 cursor-pointer" id="conteiner_logo_navbar">
                 <img src="/pokeball.png" alt="Pokeball" class="w-8 h-8 inline-block mr-2">
                 <h1 class="text-white text-3xl font-bold text-center">Pokedex</h1>
             </div>

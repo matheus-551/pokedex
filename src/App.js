@@ -1,6 +1,6 @@
 import { container_header } from './components/Header.js'
 import { Card } from './components/Card.js'
-import { AlertError } from './components/Alert.js'
+import { ErrorScreen } from './components/ErrorScreen.js'
 import { Pagination } from './components/Pagination.js'
 
 import { BuscarPokemonPorNome, BuscarPokemons } from './js/PokemonApiService.js'
@@ -8,7 +8,7 @@ import { BuscarPokemonPorNome, BuscarPokemons } from './js/PokemonApiService.js'
 import './style.css'
 
 const app = document.getElementById('app')
-app.classList.add('w-full', 'bg-white', 'flex-col')
+app.classList.add('w-full', 'bg-white', 'flex', 'flex-col')
 
 // Insere o header no app
 app.appendChild(container_header);
@@ -19,7 +19,7 @@ container_cards.classList.add('w-full', 'grid', 'grid-cols-1', 'sm:grid-cols-2',
 function ExibirCarregando() {
     const carregando = document.createElement('div');
     carregando.id = 'carregando';
-    carregando.classList.add('w-full', 'text-center', 'text-gray-500', 'my-4');
+    carregando.classList.add('w-full', 'text-xl' , 'text-center', 'text-gray-500', 'my-4');
     carregando.innerText = 'Carregando Pokémons...';
 
     app.appendChild(carregando);
@@ -33,18 +33,24 @@ function RemoverCarregando() {
 }
 
 export function CarregarFavoritos() {
-    container_cards.innerHTML = '';
+    container_cards.innerHTML = '';    
     RemoverCarregando();
     ExibirCarregando();
 
     const oldPagination = document.getElementById('pagination-container');
     if (oldPagination) oldPagination.remove();
 
+    const existingErrorScreen = document.getElementById('overlay');
+    if (existingErrorScreen) 
+        existingErrorScreen.remove();
+
     let favoritos = JSON.parse(localStorage.getItem('favoritos')) || [];
 
     if (favoritos.length === 0) {
         RemoverCarregando();
-        app.appendChild(AlertError('Nenhum Pokémon favoritado.'));
+        
+        app.appendChild(ErrorScreen('Nenhum Pokémon favoritado ainda!'));
+        
         return;
     }
 
@@ -66,13 +72,17 @@ export async function CarregaPokemonPorNome(nome) {
     const oldPagination = document.getElementById('pagination-container');
     if (oldPagination) oldPagination.remove();
 
+    const existingErrorScreen = document.getElementById('overlay');
+    if (existingErrorScreen) 
+        existingErrorScreen.remove();
+
     BuscarPokemonPorNome(nome)
         .then(async pokemon => {
             if (pokemon) {
                 const cardComModal = await Card(pokemon.name, pokemon.imagem, `https://pokeapi.co/api/v2/pokemon/${pokemon.name}`);
                 container_cards.appendChild(cardComModal);
             } else {
-                app.appendChild(AlertError(`Pokémon "${nome}" não encontrado.`));
+                app.appendChild(ErrorScreen(`Pokémon "${nome}" não encontrado.`));
             }
 
             RemoverCarregando();
@@ -81,7 +91,7 @@ export async function CarregaPokemonPorNome(nome) {
         })
         .catch(error => {
             RemoverCarregando();
-            app.appendChild(AlertError(`Erro ao carregar o Pokémon. Tente novamente mais tarde.`));
+            app.appendChild(ErrorScreen(`Erro ao carregar o Pokémon. Tente novamente mais tarde.`));
         });
 }
 
@@ -89,6 +99,10 @@ export async function CarregarPokemons(offset = 0, limit = 10) {
     container_cards.innerHTML = '';
     RemoverCarregando();
     ExibirCarregando();
+
+    const existingErrorScreen = document.getElementById('overlay');
+    if (existingErrorScreen) 
+        existingErrorScreen.remove();
     
     const oldPagination = document.getElementById('pagination-container');
     if (oldPagination) 
@@ -103,6 +117,7 @@ export async function CarregarPokemons(offset = 0, limit = 10) {
         next = response.next;
         
         response.results.forEach(async pokemon => {
+            console.log('Carregando Pokémon:', pokemon);
             const urlImagem = pokemon.imageSrc;
             const cardComModal = await Card(pokemon.nome, urlImagem, pokemon.url);
             container_cards.appendChild(cardComModal);
@@ -122,7 +137,7 @@ export async function CarregarPokemons(offset = 0, limit = 10) {
         console.error("Erro ao buscar Pokémons:", error);
         RemoverCarregando();
         
-        app.appendChild(AlertError(`Erro ao carregar Pokémons. Tente novamente mais tarde.`));
+        app.appendChild(ErrorScreen(`Erro ao carregar Pokémons. Tente novamente mais tarde.`));
     });
 }
 
