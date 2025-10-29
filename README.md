@@ -4,7 +4,7 @@ Pokedex simples em JavaScript puro (DOM), usando Axios para chamadas à API e Ta
 
 ## Link para o projeto publicado
 
-[Pokedex](https://vercel.com/matheus551s-projects/pokedex "Pokedex")
+[Pokedex](https://pokedex-eight-zeta-74.vercel.app/ "Pokedex")
 
 ## Tecnologias
 
