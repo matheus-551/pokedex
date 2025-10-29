@@ -3,7 +3,7 @@ import { Card } from './components/Card.js'
 import { AlertError } from './components/Alert.js'
 import { Pagination } from './components/Pagination.js'
 
-import { BuscarPokemonPorNome, BuscarPokemons } from './js/ConsumidorApi.js'
+import { BuscarPokemonPorNome, BuscarPokemons } from './js/PokemonApiService.js'
 
 import './style.css'
 
@@ -85,7 +85,7 @@ export async function CarregaPokemonPorNome(nome) {
         });
 }
 
-async function CarregarPokemons(offset = 0, limit = 10) {
+export async function CarregarPokemons(offset = 0, limit = 10) {
     container_cards.innerHTML = '';
     RemoverCarregando();
     ExibirCarregando();
@@ -103,7 +103,6 @@ async function CarregarPokemons(offset = 0, limit = 10) {
         next = response.next;
         
         response.results.forEach(async pokemon => {
-            console.log(pokemon);
             const urlImagem = pokemon.imageSrc;
             const cardComModal = await Card(pokemon.nome, urlImagem, pokemon.url);
             container_cards.appendChild(cardComModal);

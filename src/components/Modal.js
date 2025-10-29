@@ -1,4 +1,4 @@
-import { BuscarDetalhesPokemon } from '../js/ConsumidorApi.js';
+import { BuscarDetalhesPokemon } from '../js/PokemonApiService.js';
 import { CarregarFavoritos } from '../App.js';
 
 export async function Modal(url) {

@@ -1,4 +1,4 @@
-import { CarregaPokemonPorNome, CarregarFavoritos } from '../App.js';
+import { CarregaPokemonPorNome, CarregarFavoritos, CarregarPokemons } from '../App.js';
 
 const container_header = document.createElement('div');
 container_header.classList.add('w-full', 'flex-col', 'justify-center', 'items-center', 'mb-4', 'bg-red-600', 'shadow-sm');
@@ -8,7 +8,7 @@ const navbar = document.createElement('div');
 navbar.innerHTML = `
     <div class="navbar" id="navbar">
         <div class="flex-1">
-            <div class="flex items-center justify-start flex-1">
+            <div class="flex items-center justify-start flex-1" id="conteiner_logo_navbar">
                 <img src="/pokeball.png" alt="Pokeball" class="w-8 h-8 inline-block mr-2">
                 <h1 class="text-white text-3xl font-bold text-center">Pokedex</h1>
             </div>
@@ -33,6 +33,13 @@ formSearch.innerHTML = `
 
 container_header.appendChild(navbar);
 container_header.appendChild(formSearch);
+
+const container_logo_navbar = navbar.querySelector('#conteiner_logo_navbar');
+container_logo_navbar.addEventListener('click', async () => {
+    container_logo_navbar.classList.add('animate-bounce');
+    await CarregarPokemons();
+    container_logo_navbar.classList.remove('animate-bounce');
+});
 
 const inputSearch = formSearch.querySelector('#input_search');
 const btnSearch = formSearch.querySelector('#btn_search');
